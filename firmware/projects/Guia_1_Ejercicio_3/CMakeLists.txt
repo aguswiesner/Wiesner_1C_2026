@@ -6,4 +6,4 @@ list(APPEND EXTRA_COMPONENT_DIRS "../../drivers")
 
 include_directories(${PROJECT_NAME} ../../drivers)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(Guia_2_Ejercicio_3)
+project(Guia_1_Ejercicio_3)
