@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <inttypes.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "led.h"
@@ -40,49 +41,51 @@
 /*==================[external functions definition]==========================*/
 
 
-int8_t convertToBcdArray(uint32_t data, uint8_t digits, uint8_t * bcd_number)
+int8_t convertToBcdArray(uint32_t data, uint8_t digits, uint8_t *bcd_number)
 {
     if (bcd_number == NULL || digits == 0) {
-        return -1;
+        return -1; // parámetros inválidos
     }
 
-    // Convierte el numero a BCD desde el dígito menos significativo al más significativo
-    for (int i = digits - 1; i >= 0; --i) { 
-        bcd_number[i] = (uint8_t)(data % 10u); // Extraemos el dígito menos significativo
-        data /= 10u;
+    // Llenar con ceros por si data tiene menos dígitos que digits
+    for (uint8_t i = 0; i < digits; i++) {
+        bcd_number[i] = 0;
     }
 
-    /* If there is remaining data, it doesn't fit in the requested digit count. */
-    if (data != 0u) {
-        return -1;
+    // Se llena de derecha a izquierda (digit menos significativo primero)
+    for (int i = digits - 1; i >= 0; i--) {
+        bcd_number[i] = data % 10;
+        data /= 10;
+        if (data == 0) {
+            break;
+        }
     }
 
-    return 0;
+    // Si queda data > 0, entonces no entró en el arreglo (overflow de dígitos)
+    if (data != 0) {
+        return -2;
+    }
+
+    return 0; // éxito
 }
 
-void app_main(void)
-{
-    uint32_t mi_dato = 12345;
-    uint8_t cantidad_digitos = 5;
-    uint8_t mi_bcd[5]; // Arreglo donde se guardará el resultado
+//==================[external functions definition]==========================//
 
-    // Llamamos a la función
-    int8_t resultado = convertToBcdArray(mi_dato, cantidad_digitos, mi_bcd);
+void app_main(void){
+    uint8_t bcd_array[5]; // arreglo para almacenar hasta 5 dígitos BCD
 
-    if (resultado == 0) {
-        printf("Valor %u en BCD: ", mi_dato);
-        for (uint8_t i = 0; i < cantidad_digitos; ++i) {
-            printf("%u", mi_bcd[i]);
+    // Ejemplo: convertir 12345 a BCD con 5 dígitos
+    int8_t result = convertToBcdArray(12345, 5, bcd_array);
+
+    if(result == 0){
+        printf("BCD convertido exitosamente: ");
+        for(uint8_t i = 0; i < 5; i++){
+            printf("%d ", bcd_array[i]);
         }
         printf("\n");
     } else {
-        printf("No entró el valor %u en %u dígitos\n", mi_dato, cantidad_digitos);
-    }
-
-    /* Mantener el programa corriendo (FreeRTOS) */
-    while (true) {
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        printf("Error en la conversión: %d\n", result);
     }
 }
 
-/*==================[end of file]============================================*/
+//==================[end of file]============================================//
