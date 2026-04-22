@@ -14,7 +14,7 @@
  *
  * Funcionalidades:
  * - Usar TEC1 (SWITCH_1) para activar/detener medición (variable MEDIR).
- * - Usar TEC2 (SWITCH_2) para mantener el resultado (variable HOLD).
+ * - Usar TEC2 (SWITCH_2) para mantener el resultado en el display (variable HOLD).
  * - Refresco de medición: 1 segundo.
  * - Delay de tareas de switches: 20 ms.
  *
@@ -64,6 +64,16 @@ bool HOLD = false;
 uint16_t distancia_actual = 0;
 uint16_t distancia_mostrada = 0;
 /*==================[internal functions declaration]=========================*/
+
+/**
+ * @brief Tarea que maneja la detección de pulsaciones en los switches TEC1 y TEC2.
+ *
+ * Esta tarea lee el estado de los switches en un bucle infinito, detecta transiciones
+ * de no presionado a presionado para TEC1 y TEC2, y actualiza las variables globales
+ * MEDIR y HOLD en consecuencia. Utiliza un delay de 20 ms entre lecturas.
+ *
+ * @param pvParameter Parámetro de tarea (no utilizado).
+ */
 static void TeclasTask(void *pvParameter){
     int8_t switch_state;
     int8_t switch_prev = 0;
@@ -88,6 +98,16 @@ static void TeclasTask(void *pvParameter){
     }
 }
 
+/**
+ * @brief Tarea que mide la distancia con el sensor HC-SR04 y controla LEDs y LCD.
+ *
+ * Esta tarea mide la distancia en centímetros si MEDIR está activado, actualiza
+ * la distancia mostrada si HOLD no está activado, muestra la distancia en el LCD,
+ * y controla los LEDs según rangos de distancia. Utiliza un delay de 1 segundo
+ * entre mediciones.
+ *
+ * @param pvParameter Parámetro de tarea (no utilizado).
+ */
 static void MedirTask(void *pvParameter){
     while(true){
         if (MEDIR) {
@@ -128,6 +148,13 @@ static void MedirTask(void *pvParameter){
     }
 }
 /*==================[external functions definition]==========================*/
+
+/**
+ * @brief Función principal de la aplicación.
+ *
+ * Inicializa el sensor HC-SR04, los LEDs, el LCD, los switches, y crea las tareas
+ * TeclasTask y MedirTask para manejar la funcionalidad del medidor de distancia.
+ */
 void app_main(void){
     // Inicializar sensor HC-SR04
     HcSr04Init(GPIO_3, GPIO_2);  // ECHO en GPIO_3, TRIGGER en GPIO_2

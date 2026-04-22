@@ -42,7 +42,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "Guía 1 - Ejercicio 6"
+PROJECT_NAME           = Guia_2_Ejercicio_1
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -54,7 +54,7 @@ PROJECT_NUMBER         = 1.0
 # for a project that appears at the top of each page and should give viewers a
 # quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = "Display LCD Multiplexado con Codificación BCD"
+PROJECT_BRIEF          = "Sensor de distancia"
 
 # With the PROJECT_LOGO tag one can specify a logo or an icon that is included
 # in the documentation. The maximum height of the logo should not exceed 55
@@ -74,7 +74,7 @@ PROJECT_ICON           = imágenes/icon.ico
 # entered, it will be relative to the location where Doxygen was started. If
 # left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = ../firmware/projects/Guia_1_Ejercicio_6/doc
+OUTPUT_DIRECTORY       = ../firmware/projects/Guia_2_Ejercicio_1/doc/doc_doxygen
 
 # If the CREATE_SUBDIRS tag is set to YES then Doxygen will create up to 4096
 # sub-directories (in 2 levels) under the output directory of each output format
@@ -1026,7 +1026,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../firmware/projects/Guia_1_Ejercicio_6 \
+INPUT                  = ../firmware/projects/Guia_2_Ejercicio_1 \
                          ../firmware/drivers
 
 # This tag can be used to specify the character encoding of the source files
