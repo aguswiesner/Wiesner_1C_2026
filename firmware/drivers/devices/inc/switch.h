@@ -56,7 +56,7 @@ int8_t SwitchesRead(void);
  * @param ptrIntFunc Pointer to callback function
  * @param args Pointer to callback function parameters
  */
-void SwitchActivInt(switch_t tec, void *ptrIntFunc, void *args);
+void SwitchActivInt(switch_t tec, void *ptrIntFunc, void *args); // la llamo dependiendo de la cantidad de teclas que tenga el board, si tiene 2, la llamo 2 veces, una para cada tecla
 
 /** @} doxygen end group definition */
 /** @} doxygen end group definition */
