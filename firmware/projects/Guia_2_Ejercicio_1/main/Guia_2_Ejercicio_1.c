@@ -48,15 +48,16 @@
 #include <stdbool.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "hc_sr04.h"
+#include "hc_sr04.h" //Driver para el sensor de distancia ultrasónico.
 #include "led.h"
-#include "lcditse0803.h"
+#include "lcditse0803.h" //Control para el display LCD de 7 segmentos.
 #include "switch.h"
-#include "delay_mcu.h"
+#include "delay_mcu.h" //Funciones para generar retardos de tiempo.
 /*==================[macros and definitions]=================================*/
 #define TASK_DELAY_SWITCH 20  // 20 ms
 #define TASK_DELAY_MEDIR 1000  // 1 s
 /*==================[internal data definition]===============================*/
+//
 TaskHandle_t medir_task_handle = NULL;
 TaskHandle_t teclas_task_handle = NULL;
 bool MEDIR = false; 
@@ -74,14 +75,13 @@ uint16_t distancia_mostrada = 0;
  *
  * @param pvParameter Parámetro de tarea (no utilizado).
  */
+
+//Tarea que se encarga de detectar el momento en que se presiona el boton y cambiar el estado de las variables MEDIR y HOLD
 static void TeclasTask(void *pvParameter){
     int8_t switch_state;
-    int8_t switch_prev = 0;
+    int8_t switch_prev = 0; // Va a guarda el estado que tenían los botones en el bucle anterior
     while(true){
-        switch_state = SwitchesRead();
-        
-        // Operador lógico AND ( && ) verifica si todos los operandos son verdaderos 
-        //y devuelve verdadero solo si ambos operandos son verdaderos.
+        switch_state = SwitchesRead(); // 01 para para el botón 1 y 10 para el botón 2
 
         // Detectar presión de SWITCH_1 (TEC1) 
         if ((switch_state & SWITCH_1) && !(switch_prev & SWITCH_1)) { // Transición de no presionado a presionado
@@ -93,9 +93,9 @@ static void TeclasTask(void *pvParameter){
             HOLD = !HOLD;
         }
         
-        switch_prev = switch_state;
-        vTaskDelay(TASK_DELAY_SWITCH / portTICK_PERIOD_MS);
-    }
+        switch_prev = switch_state; // El estado que es "ahora" pasará a ser el "antes" en la próxima iteracion.
+        vTaskDelay(TASK_DELAY_SWITCH / portTICK_PERIOD_MS); // Delay para evitar rebotes y lecturas excesivas
+    } 
 }
 
 /**
@@ -108,12 +108,14 @@ static void TeclasTask(void *pvParameter){
  *
  * @param pvParameter Parámetro de tarea (no utilizado).
  */
+
+//Tarea que se encarga de medir la distancia, mostrarla en el LCD y controlar los LEDs según la distancia medida.
 static void MedirTask(void *pvParameter){
     while(true){
-        if (MEDIR) {
+        if (MEDIR) { //Si es false apaga todo y si es true mide la distancia
             distancia_actual = HcSr04ReadDistanceInCentimeters();
-            if (!HOLD) {
-                distancia_mostrada = distancia_actual;
+            if (!HOLD) { // Si es false se actualiza la distancia mostrada y si es true no se actualiza la distancia mostrada
+                distancia_mostrada = distancia_actual; // se queda con el último valor que tenía
             }
             
             // Mostrar distancia en LCD (congelada si HOLD está activado)
@@ -144,7 +146,7 @@ static void MedirTask(void *pvParameter){
             LedsOffAll();
             LcdItsE0803Off();
         }
-        vTaskDelay(TASK_DELAY_MEDIR / portTICK_PERIOD_MS);
+        vTaskDelay(TASK_DELAY_MEDIR / portTICK_PERIOD_MS); // es el delay entre las mediciones
     }
 }
 /*==================[external functions definition]==========================*/
@@ -171,5 +173,6 @@ void app_main(void){
     // Crear tareas 
     xTaskCreate(&TeclasTask, "TECLAS", 512, NULL, 5, &teclas_task_handle);
     xTaskCreate(&MedirTask, "MEDIR", 512, NULL, 5, &medir_task_handle);
+    // Se pasa: la funcion de la tarea, el nombre de la tarea, el espacio de memoria, parametros de la tarea, proriedad y el ID)
 }
 /*==================[end of file]============================================*/

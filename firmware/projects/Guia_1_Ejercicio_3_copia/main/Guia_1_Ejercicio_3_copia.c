@@ -30,7 +30,7 @@
 #include "freertos/task.h"
 #include "led.h"
 
-
+// se agrupa las variabless necesarias para el funcionamiento en una estructura (mascara)
 struct leds
 {
     uint8_t mode;        // ON, OFF, TOGGLE
@@ -39,9 +39,11 @@ struct leds
 	uint16_t periodo;   // indica el tiempo de cada ciclo
 } my_leds;
 
-enum {ON, OFF, TOGGLE}; // definimos una enumeración para los modos de operación de los leds
+// Con enum se asigna valores numéricos a los modos para entenderlos. Sería así: ON 0, OFF 1 y TOGGLE 2.
+enum {ON, OFF, TOGGLE};
 
-void maneja_leds (struct leds *leds) // recibe un puntero a la estructura para poder modificar sus valores
+
+void maneja_leds (struct leds *leds) // recibe direccion de memoria (puntero) de la estructura leds
 {
 	switch(leds->mode){ // evaluamos el modo de operación
 		case ON:

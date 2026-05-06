@@ -40,8 +40,11 @@
 
 /*==================[external functions definition]==========================*/
 
-
+// toma un número binario (entero) y descomponerlo en sus dígitos decimales.
 int8_t convertToBcdArray(uint32_t data, uint8_t digits, uint8_t *bcd_number)
+// data: numero de 32 bits que se va a convertir a BCD
+// digits: cantidad de digitos que se esperan obtener
+// bcd_number: es un puntero que apunta al arreglo donde se almacenan los digitos BDC
 {
     if (bcd_number == NULL || digits == 0) {
         return -1; // parámetros inválidos

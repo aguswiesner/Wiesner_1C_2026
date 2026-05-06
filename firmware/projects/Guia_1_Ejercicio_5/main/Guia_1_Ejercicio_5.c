@@ -33,17 +33,19 @@
 
 // Estructura para configuración de GPIO
 
-typedef struct
+typedef struct  //sirve para crear alias sobre un tipo de dato que ya existe 
+
+//contenedor que permite agrupar diferentes tipos de datos bajo un mismo nombre
 {
-	gpio_t pin;			/*!< GPIO pin number */
-	io_t dir;			/*!< GPIO direction '0' IN;  '1' OUT*/
-} gpioConf_t;
+	gpio_t pin;			// número de pin
+	io_t dir;			// dirección (entrada o salida)
+} gpioConf_t; 			
 
 // Vector que mapea los 4 bits del BCD a los pines GPIO
-// b0 -> GPIO_20
+// b0 -> GPIO_20 (LSB)
 // b1 -> GPIO_21
 // b2 -> GPIO_22
-// b3 -> GPIO_23
+// b3 -> GPIO_23 (MSB)
 
 static gpioConf_t bcd_gpio_map[4] = {
 	{GPIO_20, GPIO_OUTPUT},

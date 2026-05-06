@@ -69,12 +69,12 @@
 /**
  * @brief Variable que indica si se debe realizar medición
  */
-volatile bool MEDIR = false;
+volatile bool MEDIR = false; // volatile porque se modifica desde una interrupción
 
 /**
  * @brief Variable que indica si se debe mantener el resultado en el display (HOLD)
  */
-volatile bool HOLD = false;
+volatile bool HOLD = false; // volatile porque se modifica desde una interrupción
 
 /**
  * @brief Distancia medida actualmente por el sensor HC-SR04 en centímetros
@@ -124,6 +124,7 @@ void InterrupcionTec2(void *args) {
 void TemporizadorMedicion(void *param) {
     vTaskNotifyGiveFromISR(tarea_medicion_handle, pdFALSE); 
 }
+// Envía una señal (notificación) a la tarea de medición para decirle que es momento de realizar una nueva medicion
 
 /**
  * @brief Tarea que maneja las mediciones y actualización de display/LEDs

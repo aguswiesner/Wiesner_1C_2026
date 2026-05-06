@@ -58,12 +58,13 @@
  * Esta estructura define la configuración necesaria para un pin GPIO,
  * incluyendo el número del pin y su dirección (entrada/salida).
  */
-typedef struct
-{
-	gpio_t pin;			/*!< Número del pin GPIO */
-	io_t dir;			/*!< Dirección del GPIO: GPIO_INPUT o GPIO_OUTPUT */
-} gpioConf_t;
+typedef struct  //sirve para crear alias sobre un tipo de dato que ya existe 
 
+//contenedor que permite agrupar diferentes tipos de datos bajo un mismo nombre
+{
+	gpio_t pin;			// número de pin
+	io_t dir;			// dirección (entrada o salida)
+} gpioConf_t; 			
 /**
  * @brief Mapeo de bits BCD a pines GPIO
  *
@@ -72,7 +73,13 @@ typedef struct
  *
  * @note Los pines utilizados son GPIO_20, GPIO_21, GPIO_22, GPIO_23
  */
-static gpioConf_t bcd_gpio_map[4] = {
+
+// Vector que mapea los 4 bits del BCD a los pines GPIO
+// b0 -> GPIO_20 (LSB)
+// b1 -> GPIO_21
+// b2 -> GPIO_22
+// b3 -> GPIO_23 (MSB)
+ static gpioConf_t bcd_gpio_map[4] = {
 	{GPIO_20, GPIO_OUTPUT},	/*!< Bit 0 (LSB) -> GPIO_20 */
 	{GPIO_21, GPIO_OUTPUT},	/*!< Bit 1 -> GPIO_21 */
 	{GPIO_22, GPIO_OUTPUT},	/*!< Bit 2 -> GPIO_22 */
@@ -174,28 +181,24 @@ void app_main(void)
 {
 	/** @brief Valores de prueba para demostrar el funcionamiento del display */
 	uint32_t test_values[] = {0, 1, 42, 123};
-	uint8_t num_tests = sizeof(test_values) / sizeof(test_values[0]);
+	uint8_t num_tests = sizeof(test_values) / sizeof(test_values[0]); 
 
 	// Configurar todos los GPIOs como salidas
 	for (uint8_t i = 0; i < 4; i++)
 	{
-		GPIOInit(bcd_gpio_map[i].pin, GPIO_OUTPUT);
+		GPIOInit(bcd_gpio_map[i].pin, GPIO_OUTPUT); //4 pines de datos (BCD)
 	}
 	for (uint8_t i = 0; i < 3; i++)
 	{
-		GPIOInit(digit_select_map[i].pin, GPIO_OUTPUT);
+		GPIOInit(digit_select_map[i].pin, GPIO_OUTPUT); //3 pines de selección de dígitos
 	}
-
-	printf("=== Display LCD Multiplexado ===\n");
-	printf("Mostrando valores en display de 3 dígitos...\n\n");
 
 	// Ciclo de demostración
 	while (1)
 	{
-		for (uint8_t test_idx = 0; test_idx < num_tests; test_idx++)
+		for (uint8_t test_idx = 0; test_idx < num_tests; test_idx++) //Bucle que recorre uno por uno los números de nuestra lista de prueba
 		{
-			uint32_t value = test_values[test_idx];
-			printf("Mostrando: %lu\n", value);
+			uint32_t value = test_values[test_idx];	
 
 			// Mostrar el valor por 2 segundos
 			for (uint8_t sec = 0; sec < 20; sec++)  // 20 iteraciones * 100ms = 2s
@@ -234,7 +237,7 @@ void bcd_to_gpio(uint8_t bcd_digit, gpioConf_t *gpio_conf)
 	for (uint8_t i = 0; i < 4; i++)
 	{
 		// Extrae el bit i usando desplazamiento y máscara AND
-		// Desplaza el número BCD 'i' posiciones a la derecha y aplica AND con 0x01
+		// Desplaza el número BCD 'i' posiciones a la derecha y aplica AND con 0x01 (0001 en binario)
 		uint8_t bit_value = (bcd_digit >> i) & 0x01;
 
 		// Setea el GPIO correspondiente con el valor del bit extraído
@@ -339,7 +342,7 @@ int8_t display_number(uint32_t data, uint8_t digits, gpioConf_t *bcd_gpio, gpioC
 	// Multiplexar los dígitos (mostrar uno a la vez)
 	for (uint8_t digit_pos = 0; digit_pos < digits; digit_pos++)
 	{
-		// Apagar todos los dígitos primero (estado seguro)
+		// Apagar todos los dígitos primero
 		for (uint8_t i = 0; i < 3; i++)
 		{
 			GPIOState(digit_select_gpio[i].pin, 0);
@@ -349,8 +352,7 @@ int8_t display_number(uint32_t data, uint8_t digits, gpioConf_t *bcd_gpio, gpioC
 		bcd_to_gpio(bcd_digits[digit_pos], bcd_gpio);
 
 		// Encender el dígito correspondiente
-		// Nota: Los pines de selección son activos en alto según la implementación
-		// SEL_1, SEL_2, SEL_3 activan dígito 1, 2, 3 respectivamente
+		// Los pines de selección son activos en alto
 		GPIOState(digit_select_gpio[digit_pos].pin, 1);
 
 		// Pequeño delay para estabilidad visual (ajustable según necesidades)
