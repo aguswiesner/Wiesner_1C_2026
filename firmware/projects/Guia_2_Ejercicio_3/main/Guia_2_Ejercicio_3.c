@@ -97,7 +97,7 @@ uint16_t distancia_mostrada = 0;
 /**
  * @brief Handle de la tarea de medición
 */
-TaskHandle_t tarea_medicion_handle = NULL;
+TaskHandle_t tarea_medicion_handle = NULL; // crea un puntero de referencia para el manejador de la tarea de medición, que se usará para enviarle notificaciones desde el timer
 /*==================[internal functions declaration]=========================*/
 
 /**
@@ -123,7 +123,7 @@ void InterrupcionTec2(void *args) {
 }
 
 /**
- * @brief Callback para recepción de datos UART
+ * @brief Recepción de datos UART
  *
  * Esta función se ejecuta cuando se recibe un byte por UART.
  * Procesa los comandos 'O' y 'H' para controlar las variables MEDIR y HOLD.
@@ -131,7 +131,7 @@ void InterrupcionTec2(void *args) {
  */
 void LeerPuertoSerie(void *param) {
     uint8_t tecla;
-    UartReadByte(UART_PC, &tecla);
+    UartReadByte(UART_PC, &tecla); // Lee un byte del puerto UART_PC y lo almacena en la variable tecla
     switch (tecla) {
         case 'O':
             MEDIR = !MEDIR;
@@ -248,10 +248,10 @@ void app_main(void) {
     
     // Configurar UART
     serial_config_t uart_pc = {
-        .port = UART_PC,
-        .baud_rate = 115200,
+        .port = UART_PC, 
+        .baud_rate = 115200, //velocidad de transmision de bits por segundo
         .func_p = LeerPuertoSerie, /* Función que se ejecuta al recibir dato */
-        .param_p = NULL
+        .param_p = NULL 
     };
     UartInit(&uart_pc);
     

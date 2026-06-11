@@ -50,9 +50,10 @@
 #define PERIODO_MUESTREO_US       (1000000u / FRECUENCIA_MUESTREO_HZ)
 
 /** @brief Velocidad de la UART hacia el PC. */
-#define VELOCIDAD_BAUDIOS_UART    115200u
+#define VELOCIDAD_BAUD_RATE    115200u
 
 /** @brief Datos de la señal ECG programable que se envía al DAC. */
+//arreglo unidimensional de constantes de tipo byte que contiene los valores de la señal ECG a generar 
 const unsigned char datos_ECG[] = {
 17,17,17,17,17,17,17,17,17,17,17,18,18,18,17,17,17,17,17,17,17,18,18,18,18,18,18,18,17,17,16,16,16,16,17,17,18,18,18,17,17,17,17,
 18,18,19,21,22,24,25,26,27,28,29,31,32,33,34,34,35,37,38,37,34,29,24,19,15,14,15,16,17,17,17,16,15,14,13,13,13,13,13,13,13,12,12,
@@ -138,7 +139,7 @@ static void TareaOsciloscopioYECG(void *pvParameters) {
 
         // Si el temporizador dio la orden:
         if (pedir_muestra) {
-            pedir_muestra = false; // Bajamos la bandera
+            pedir_muestra = false;
 
             // 1. Actualizar DAC
             AnalogOutputWrite(datos_ECG[indice_ecg]);
@@ -163,7 +164,7 @@ static void TareaOsciloscopioYECG(void *pvParameters) {
 void app_main(void) {
     serial_config_t configuracion_uart = {
         .port = UART_PC,
-        .baud_rate = VELOCIDAD_BAUDIOS_UART,
+        .baud_rate = VELOCIDAD_BAUD_RATE,
         .func_p = UART_NO_INT,
         .param_p = NULL
     };
