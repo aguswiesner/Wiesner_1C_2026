@@ -1,0 +1,42 @@
+# Doxygen configuration file for Proyecto_Integrador
+
+PROJECT_NAME           = "Proyecto Integrador"
+PROJECT_BRIEF          = "Alcoholímetro con sensor MQ-3 y Bluetooth"
+OUTPUT_DIRECTORY       = docs
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = Spanish
+INPUT                  = main
+FILE_PATTERNS          = *.c *.h
+RECURSIVE              = NO
+EXCLUDE                = build
+GENERATE_LATEX         = NO
+GENERATE_XML           = NO
+QUIET                  = YES
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_MAN           = NO
+
+# Documentation style
+JAVADOC_AUTOBRIEF      = YES
+MULTILINE_CPP_IS_BRIEF = YES
+
+# Source browsing
+SOURCE_BROWSER         = NO
+INLINE_SOURCES         = NO
+
+# Repeated sections
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+# Enable extraction of documented entities only
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+
+# Use simple section names
+TAB_SIZE               = 4
+FILE_VERSION_FILTER    =
+LAYOUT_FILE            =
+ALIASES                =
+
+# Keep comments simple and in Spanish
+MARKDOWN_SUPPORT       = NO
